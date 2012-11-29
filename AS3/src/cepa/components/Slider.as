@@ -30,11 +30,11 @@ package cepa.components
 			this.max = max;
 			this.step = step;
 			
-			// todo: não está funcionando!
-			//handle.buttomMode = true;
+			handle.buttonMode = true;
 			trail.visible = false;
 			
 			enabled = true;
+			liveDragging = false;
 		}
 		
 		/**
@@ -156,6 +156,16 @@ package cepa.components
 			}
 		}
 		
+		public function get liveDragging():Boolean 
+		{
+			return _liveDragging;
+		}
+		
+		public function set liveDragging(value:Boolean):void 
+		{
+			_liveDragging = value;
+		}
+		
 		//------------------------------------------------------------------
 		// Membros privados.
 		//------------------------------------------------------------------
@@ -188,8 +198,7 @@ package cepa.components
 			previousPos = handle.x;
 			handle.x = pos;
 			
-			
-			if (Math.abs(handle.x - previousPos) >= 1 /*pixel*/)
+			if (liveDragging && Math.abs(handle.x - previousPos) >= 1 /*pixel*/)
 			{
 				dispatchEvent(new Event(Event.CHANGE, true));
 			}
@@ -206,6 +215,8 @@ package cepa.components
 			
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, dragHandle);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, releaseHandle);
+			
+			if(!liveDragging) dispatchEvent(new Event(Event.CHANGE, true));
 		}
 
 		/*
@@ -231,5 +242,6 @@ package cepa.components
 		private var _max:Number;
 		private var _step:Number;
 		private var _enabled:Boolean;
+		private var _liveDragging:Boolean;
 	}
 }
